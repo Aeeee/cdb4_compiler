@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp1\Cdb4Compiler.csproj" />
+    <ProjectReference Include="..\Cdb4Compiler\Cdb4Compiler.csproj" />
   </ItemGroup>
 
 </Project>
