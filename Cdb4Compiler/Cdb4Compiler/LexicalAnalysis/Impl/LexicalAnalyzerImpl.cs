@@ -64,7 +64,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Impl
 
             if (curMatches > 0 && nextMatches == 0)
             {
-                var token = TokenRules.CreateToken(GetBufferContent(col), line, col);
+                var token = TokenRules.CreateToken(GetBufferContent(col), line+1, col+1);
                 tokens.Add(token);
                 bufferStart = col + 1;
             }
@@ -73,7 +73,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Impl
             if (curMatches == 0 && nextIsNullOrWhiteSpace)
             {
                 var error = new LexicalError(
-                    "Token not recognized: " + GetBufferContent(col), line, col);
+                    "Token not recognized: " + GetBufferContent(col), line+1, col+1);
                 errors.Add(error);
                 bufferStart = col + 1;
             }
