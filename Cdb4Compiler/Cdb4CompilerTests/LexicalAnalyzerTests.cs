@@ -41,36 +41,37 @@ namespace Tests
         public void CorrectAnalysis1Test()
         {
             var analyzer = new LexicalAnalyzer(CORRECT_CODE_1);
-            analyzer.GetAllTokens();
-            analyzer.GetAllErrors();
+            var tokens = analyzer.GetAllTokens();
+            var errors = analyzer.GetAllErrors();
 
-            //TODO: test tokens
-            //TODO: test errors
-            Assert.Pass();
+            Assert.AreEqual(41, tokens.Count);
+            Assert.AreEqual(0, errors.Count);
+
+            //TODO: better test of tokens?
         }
 
         [Test]
         public void IncorrectAnalysis1Test()
         {
             var analyzer = new LexicalAnalyzer(INCORRECT_CODE_1);
-            analyzer.GetAllTokens();
-            analyzer.GetAllErrors();
+            var tokens = analyzer.GetAllTokens();
+            var errors = analyzer.GetAllErrors();
 
-            //TODO: test tokens
-            //TODO: test errors
-            Assert.Pass();
+            Assert.Greater(tokens.Count, 10);
+            Assert.Greater(errors.Count, 0);
+            //TODO: better test of tokens and erros?
         }
 
         [Test]
         public void IncorrectAnalysis2Test()
         {
             var analyzer = new LexicalAnalyzer(INCORRECT_CODE_2);
-            analyzer.GetAllTokens();
-            analyzer.GetAllErrors();
+            var tokens = analyzer.GetAllTokens();
+            var errors = analyzer.GetAllErrors();
 
-            //TODO: test tokens
-            //TODO: test errors
-            Assert.Pass();
+            Assert.Greater(tokens.Count, 10);
+            Assert.Greater(errors.Count, 0);
+            //TODO: better test of tokens and erros?
         }
 
     }
