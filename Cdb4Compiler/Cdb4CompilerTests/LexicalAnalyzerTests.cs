@@ -13,7 +13,7 @@ namespace Tests
             IF a==6 THEN x := 1; ELSE x := -1;
             ";
 
-        private const string INCORRECT_CODE_1 = @"
+        private const string CORRECT_CODE_2 = @"
             Var a, b, c;
             a := 4;
             b := (3+5)/2+(a-1); // Должно получиться 7
@@ -22,6 +22,12 @@ namespace Tests
                 IF a+5<b THEN c := 200; ELSE c := 0;
             ELSE
                 c := 100;
+            ";
+
+        private const string INCORRECT_CODE_1 = @"
+            Var a, 4b, c;  // Нельзя назвать переменную 4b
+            a.x := 11; // Точки в переменных не поддерживаются
+            IF a&b<3 THEN c := 44f; // Символ & не поддерживается. Нельзя использовать буквы в константе
             ";
 
         private const string INCORRECT_CODE_2 = @"
@@ -51,6 +57,19 @@ namespace Tests
         }
 
         [Test]
+        public void CorrectAnalysis2Test()
+        {
+            var analyzer = new LexicalAnalyzer(CORRECT_CODE_2);
+            var tokens = analyzer.GetAllTokens();
+            var errors = analyzer.GetAllErrors();
+
+            Assert.AreEqual(64, tokens.Count);
+            Assert.AreEqual(0, errors.Count);
+
+            //TODO: better test of tokens?
+        }
+
+        [Test]
         public void IncorrectAnalysis1Test()
         {
             var analyzer = new LexicalAnalyzer(INCORRECT_CODE_1);
@@ -68,7 +87,7 @@ namespace Tests
             var analyzer = new LexicalAnalyzer(INCORRECT_CODE_2);
             var tokens = analyzer.GetAllTokens();
             var errors = analyzer.GetAllErrors();
-
+            
             Assert.Greater(tokens.Count, 10);
             Assert.Greater(errors.Count, 0);
             //TODO: better test of tokens and erros?

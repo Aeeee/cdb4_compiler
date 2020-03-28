@@ -9,18 +9,18 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
     {
         private static TokenRule[] rules = new TokenRule[]
         {
-            new TokenRule(TokenType.SPECIAL_SYMBOL, ";|,"),
-            new TokenRule(TokenType.KEYWORD, "VAR|IF|THEN|ELSE"),
-            new TokenRule(TokenType.PARENTHESES, "\\(|\\)"),
-            new TokenRule(TokenType.COMPARSION_OP, ">|<|=="),
-            new TokenRule(TokenType.SUMM_DIFF_OP, "+|-"),
-            new TokenRule(TokenType.MUL_DIV_OP, "*|/"),
-            new TokenRule(TokenType.ASSIGNMENT_OP, ":="),
-            new TokenRule(TokenType.CONSTANT, "[0-9]+"),
-            new TokenRule(TokenType.IDENTIFIER, "[a-z]+")
+            new TokenRule(TokenType.SPECIAL_SYMBOL, "^(;|,)$"),
+            new TokenRule(TokenType.KEYWORD, "^(Var|IF|THEN|ELSE)$"),
+            new TokenRule(TokenType.PARENTHESES, "^(\\(|\\))$"),
+            new TokenRule(TokenType.COMPARSION_OP, "^(>|<|==)$"),
+            new TokenRule(TokenType.SUMM_DIFF_OP, "^(\\+|-)$"),
+            new TokenRule(TokenType.MUL_DIV_OP, "^(\\*|/)$"),
+            new TokenRule(TokenType.ASSIGNMENT_OP, "^:=$"),
+            new TokenRule(TokenType.CONSTANT, "^([0-9]+)$"),
+            new TokenRule(TokenType.IDENTIFIER, "^([a-z]+)$")
         };
 
-        public int GetMatchCount(string input)
+        public static int GetMatchCount(string input)
         {
             int matches = 0;
             foreach (var rule in rules)
@@ -29,7 +29,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
             return matches;
         }
 
-        public Token CreateToken(string input, int line, int column)
+        public static Token CreateToken(string input, int line, int column)
         {
             var rule = GetFirstMatch(input);
             if (rule == null)
@@ -37,7 +37,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
             return new Token(rule.Type, input, line, column);
         }
 
-        private TokenRule GetFirstMatch(string input)
+        private static TokenRule GetFirstMatch(string input)
         {
             foreach (var rule in rules)
                 if (Regex.IsMatch(input, rule.Pattern))

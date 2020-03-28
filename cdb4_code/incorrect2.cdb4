@@ -1,0 +1,10 @@
+int a, b, c; // ‘int’ instead of ‘Var’
+a := 4 // no semicolon at the end
+/* Non-supported
+    comment style */
+b := (3+5/2+(a-1); // One parenthesis is not closed
+IF a>3 THEN a := a + 1;
+IF a<b THEN
+    IF a+5<b THEN c := 200; ELSE c := 0;
+ELSE THEN // No such thing as ‘ELSE THEN’
+    c := 100;
