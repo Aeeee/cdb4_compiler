@@ -17,12 +17,12 @@ namespace Cdb4Compiler.LexicalAnalysis
             impl.Analyze(sourceText);
         }
 
-        public IReadOnlyCollection<Token> GetAllTokens()
+        public IReadOnlyList<Token> GetAllTokens()
         {
             return tokens;
         }
 
-        public IReadOnlyCollection<LexicalError> GetAllErrors()
+        public IReadOnlyList<LexicalError> GetAllErrors()
         {
             return errors;
         }
