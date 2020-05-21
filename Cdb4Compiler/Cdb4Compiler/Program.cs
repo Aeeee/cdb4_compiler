@@ -42,6 +42,8 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("(" + token.Type + "):  " + token.Text);
             }
+
+            Console.ReadLine();
         }
     }
 }

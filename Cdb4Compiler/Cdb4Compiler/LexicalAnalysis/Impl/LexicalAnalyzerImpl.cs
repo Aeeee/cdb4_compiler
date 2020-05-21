@@ -36,6 +36,8 @@ namespace Cdb4Compiler.LexicalAnalysis.Impl
                         break;
                 }
             }
+
+            tokens.Add(new Token(TokenType.END_TEXT, "", lines.Length, 1));
         }
 
 

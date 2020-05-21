@@ -21,7 +21,7 @@ namespace Tests
             IF a<b THEN
                 IF a+5<b THEN c := 200; ELSE c := 0;
             ELSE
-                c := 100;
+                c := -100;
             ";
 
         private const string INCORRECT_CODE_1 = @"
@@ -50,7 +50,7 @@ namespace Tests
             var tokens = analyzer.GetAllTokens();
             var errors = analyzer.GetAllErrors();
 
-            Assert.AreEqual(41, tokens.Count);
+            Assert.AreEqual(42, tokens.Count);
             Assert.AreEqual(0, errors.Count);
 
             //TODO: better test of tokens?
@@ -63,7 +63,7 @@ namespace Tests
             var tokens = analyzer.GetAllTokens();
             var errors = analyzer.GetAllErrors();
 
-            Assert.AreEqual(64, tokens.Count);
+            Assert.AreEqual(66, tokens.Count);
             Assert.AreEqual(0, errors.Count);
 
             //TODO: better test of tokens?
@@ -76,7 +76,7 @@ namespace Tests
             var tokens = analyzer.GetAllTokens();
             var errors = analyzer.GetAllErrors();
 
-            Assert.Greater(tokens.Count, 10);
+            Assert.Greater(tokens.Count, 11);
             Assert.Greater(errors.Count, 0);
             //TODO: better test of tokens and erros?
         }
@@ -88,7 +88,7 @@ namespace Tests
             var tokens = analyzer.GetAllTokens();
             var errors = analyzer.GetAllErrors();
             
-            Assert.Greater(tokens.Count, 10);
+            Assert.Greater(tokens.Count, 11);
             Assert.Greater(errors.Count, 0);
             //TODO: better test of tokens and erros?
         }

@@ -14,6 +14,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
         MUL_DIV_OP,
         ASSIGNMENT_OP,
         CONSTANT,
-        IDENTIFIER
+        IDENTIFIER,
+        END_TEXT
     }
 }

@@ -5,4 +5,4 @@ IF a>3 THEN a := a + 1;
 IF a<b THEN
     IF a+5<b THEN c := 200; ELSE c := 0;
 ELSE
-    c := 100;
+    c := -100;
