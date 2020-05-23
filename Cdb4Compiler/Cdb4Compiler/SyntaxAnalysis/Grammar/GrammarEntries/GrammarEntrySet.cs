@@ -8,6 +8,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar.GrammarEntries
     {
         private List<GrammarEntry> entries;
         public IReadOnlyList<GrammarEntry> Entries { get => entries; }
+        public int Length { get => entries.Count; }
 
         public GrammarEntrySet(params GrammarEntry[] entryArr)
         {
