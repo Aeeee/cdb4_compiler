@@ -114,21 +114,26 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
         private static TerminalEntry T(TokenType type) => new TerminalEntry(type);
         private static TerminalEntry T(TokenType type, string restr) => new TerminalEntry(type, restr);
 
-        public static (NonTermEntry, int) MatchReduce(List<ParseTreeNode> nodes, int startFrom)
+        public static NonTermEntry MatchReduce(List<ParseTreeNode> nodes, int startFrom, int count)
         {
-            (var rule, int length) = GetMatchingRule(nodes, startFrom);
-            if (rule != null)
-                return (rule.Result, length);
-            return (null, 0);
+            var rule = GetMatchingRule(nodes, startFrom, count);
+            return rule?.Result;
         }
 
-        private static (GrammarRule, int) GetMatchingRule(List<ParseTreeNode> nodes, int startFrom)
+        private static GrammarRule GetMatchingRule(
+            List<ParseTreeNode> nodes, int startFrom, int count)
         {
             foreach (var rule in rules)
+            {
                 foreach (var pattern in rule.Patterns)
+                {
+                    if (pattern.Length != count)
+                        continue;
                     if (DoesMatch(pattern, nodes, startFrom))
-                        return (rule, pattern.Length);
-            return (null, 0);
+                        return rule;
+                }
+            }
+            return null;
         }
 
         private static bool DoesMatch(GrammarEntrySet pattern, List<ParseTreeNode> nodes, int startFrom)

@@ -47,9 +47,10 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
 
         private bool Reduce(List<ParseTreeNode> top)
         {
-            for (int i = 0; i < top.Count; i++)
+            for (int i = top.Count - 1; i >= 0; i--)
             {
-                (var nonterm, int length) = GrammarRules.MatchReduce(top, i);
+                int length = top.Count - i;
+                var nonterm = GrammarRules.MatchReduce(top, i, length);
                 if (nonterm != null)
                 {
                     top.RemoveRange(i, length);
