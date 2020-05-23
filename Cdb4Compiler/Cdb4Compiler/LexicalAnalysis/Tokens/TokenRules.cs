@@ -12,7 +12,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
             new TokenRule(TokenType.SPECIAL_SYMBOL, "^(;|,)$"),
             new TokenRule(TokenType.KEYWORD, "^(Var|IF|THEN|ELSE)$"),
             new TokenRule(TokenType.PARENTHESES, "^(\\(|\\))$"),
-            new TokenRule(TokenType.COMPARSION_OP, "^(>|<|==)$"),
+            new TokenRule(TokenType.COMPARISON_OP, "^(>|<|==)$"),
             new TokenRule(TokenType.MATH_OP, "^(\\+|-|\\*|/)$"),
             new TokenRule(TokenType.ASSIGNMENT_OP, "^:=$"),
             new TokenRule(TokenType.CONSTANT, "^([0-9]+)$"),

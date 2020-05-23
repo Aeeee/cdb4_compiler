@@ -9,7 +9,7 @@ namespace Cdb4Compiler.LexicalAnalysis.Tokens
         SPECIAL_SYMBOL,
         KEYWORD,
         PARENTHESES,
-        COMPARSION_OP,
+        COMPARISON_OP,
         MATH_OP,
         ASSIGNMENT_OP,
         CONSTANT,

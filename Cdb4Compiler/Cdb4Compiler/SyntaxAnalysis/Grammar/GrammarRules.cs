@@ -12,88 +12,108 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
         private static GrammarRule[] rules = new GrammarRule[]
         {
             new GrammarRule(Nt(NonTermType.PROGRAM),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.VAR_DECL),
                     Nt(NonTermType.OPERATOR_LIST),
                     T(TokenType.END_TEXT)
                 )
             ),
             new GrammarRule(Nt(NonTermType.VAR_DECL),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.VAR_LIST),
                     T(TokenType.SPECIAL_SYMBOL, ";")
                 )
             ),
             new GrammarRule(Nt(NonTermType.VAR_LIST),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.VAR_LIST),
                     T(TokenType.SPECIAL_SYMBOL, ","),
                     T(TokenType.IDENTIFIER)
                 ),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     T(TokenType.KEYWORD, "Var"),
                     T(TokenType.IDENTIFIER)
                 )
             ),
             new GrammarRule(Nt(NonTermType.OPERATOR_LIST),
                 new GrammarEntrySet(
+                    new GrammarRestrictions(
+                        T(TokenType.KEYWORD, "ELSE")
+                    ),
                     Nt(NonTermType.OPERATOR_LIST),
                     Nt(NonTermType.OPERATOR)
                 ),
                 new GrammarEntrySet(
+                    new GrammarRestrictions(
+                        T(TokenType.KEYWORD, "ELSE")
+                    ),
                     Nt(NonTermType.OPERATOR)
                 )
             ),
             new GrammarRule(Nt(NonTermType.OPERATOR),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.ASSIGNMENT)
                 ),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.COMPLEX_OPERATOR)
                 )
             ),
             new GrammarRule(Nt(NonTermType.ASSIGNMENT),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     T(TokenType.IDENTIFIER),
                     T(TokenType.ASSIGNMENT_OP),
                     Nt(NonTermType.EXPRESSION),
                     T(TokenType.SPECIAL_SYMBOL, ";")
                 )
             ),
-            new GrammarRule(Nt(NonTermType.EXPRESSION),
-                new GrammarEntrySet(
-                    T(TokenType.MATH_OP, "-"),
-                    Nt(NonTermType.SUBEXPRESSION)
-                ),
-                new GrammarEntrySet(
-                    Nt(NonTermType.SUBEXPRESSION)
-                )
-            ),
             new GrammarRule(Nt(NonTermType.SUBEXPRESSION),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     T(TokenType.PARENTHESES, "("),
                     Nt(NonTermType.EXPRESSION),
                     T(TokenType.PARENTHESES, ")")
                 ),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     Nt(NonTermType.OPERAND)
                 ),
-                new GrammarEntrySet(
-                    Nt(NonTermType.SUBEXPRESSION),
+                new GrammarEntrySet(null,
+                    Nt(NonTermType.EXPRESSION),
                     T(TokenType.MATH_OP),
+                    Nt(NonTermType.EXPRESSION)
+                ),
+                new GrammarEntrySet(null,
+                    Nt(NonTermType.EXPRESSION),
+                    T(TokenType.MATH_OP),
+                    Nt(NonTermType.SUBEXPRESSION)
+                ),
+                new GrammarEntrySet(null,
+                    Nt(NonTermType.EXPRESSION),
+                    T(TokenType.COMPARISON_OP),
+                    Nt(NonTermType.EXPRESSION)
+                )
+            ),
+            new GrammarRule(Nt(NonTermType.EXPRESSION),
+                new GrammarEntrySet(null,
+                    T(TokenType.MATH_OP, "-"),
+                    Nt(NonTermType.SUBEXPRESSION)
+                ),
+                new GrammarEntrySet(null,
                     Nt(NonTermType.SUBEXPRESSION)
                 )
             ),
             new GrammarRule(Nt(NonTermType.OPERAND),
                 new GrammarEntrySet(
+                    new GrammarRestrictions(
+                        T(TokenType.ASSIGNMENT_OP)
+                    ),
+
                     T(TokenType.IDENTIFIER)
                 ),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     T(TokenType.CONSTANT)
                 )
             ),
             new GrammarRule(Nt(NonTermType.COMPLEX_OPERATOR),
-                new GrammarEntrySet(
+                new GrammarEntrySet(null,
                     T(TokenType.KEYWORD, "IF"),
                     Nt(NonTermType.EXPRESSION),
                     T(TokenType.KEYWORD, "THEN"),
@@ -102,6 +122,10 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
                     Nt(NonTermType.OPERATOR)
                 ),
                 new GrammarEntrySet(
+                    new GrammarRestrictions(
+                        T(TokenType.KEYWORD, "ELSE")
+                    ),
+
                     T(TokenType.KEYWORD, "IF"),
                     Nt(NonTermType.EXPRESSION),
                     T(TokenType.KEYWORD, "THEN"),
@@ -114,14 +138,15 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
         private static TerminalEntry T(TokenType type) => new TerminalEntry(type);
         private static TerminalEntry T(TokenType type, string restr) => new TerminalEntry(type, restr);
 
-        public static NonTermEntry MatchReduce(List<ParseTreeNode> nodes, int startFrom, int count)
+        public static NonTermEntry MatchReduce(List<ParseTreeNode> nodes,
+            int startFrom, int count, ParseTreeNode next)
         {
-            var rule = GetMatchingRule(nodes, startFrom, count);
+            var rule = GetMatchingRule(nodes, startFrom, count, next);
             return rule?.Result;
         }
 
-        private static GrammarRule GetMatchingRule(
-            List<ParseTreeNode> nodes, int startFrom, int count)
+        private static GrammarRule GetMatchingRule(List<ParseTreeNode> nodes, 
+            int startFrom, int count, ParseTreeNode next)
         {
             foreach (var rule in rules)
             {
@@ -129,11 +154,24 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
                 {
                     if (pattern.Length != count)
                         continue;
+                    if (IsRestricted(pattern.Restrictions, next))
+                        continue;
                     if (DoesMatch(pattern, nodes, startFrom))
                         return rule;
                 }
             }
             return null;
+        }
+
+        private static bool IsRestricted(GrammarRestrictions restrictions, ParseTreeNode next)
+        {
+            if (restrictions == null)
+                return false;
+
+            foreach (var r in restrictions.FollowEntries)
+                if (DoesMatch(next, r))
+                    return true;
+            return false;
         }
 
         private static bool DoesMatch(GrammarEntrySet pattern, List<ParseTreeNode> nodes, int startFrom)

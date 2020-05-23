@@ -15,19 +15,20 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             if (tokens.Count == 0)
                 return;
             var top = BuildInitialTop(tokens);
+            TermParseTreeNode next = PeekNextTerm(tokens, 1);
 
             int i = 1;
             while (top.Count > 1 || !IsNonTermOfType(top[0], NonTermType.PROGRAM))
             {
                 PrintTop(top);
 
-                if (Reduce(top))
+                if (Reduce(top, next))
                     continue;
 
-                if (CanShift(i, tokens))
+                if (next != null)
                 {
-                    Shift(top, tokens, i);
-                    i += 1;
+                    Shift(top, next, ref i);
+                    next = PeekNextTerm(tokens, i);
                     continue;
                 }
 
@@ -35,6 +36,12 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
                 break;
             }
 
+            PrintTop(top);
+        }
+
+        private TermParseTreeNode PeekNextTerm(IReadOnlyList<Token> tokens, int i)
+        {
+            return tokens.Count > i ? new TermParseTreeNode(tokens[i]) : null;
         }
 
         private void PrintTop(List<ParseTreeNode> top)
@@ -45,12 +52,13 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             Console.WriteLine("---\n");
         }
 
-        private bool Reduce(List<ParseTreeNode> top)
+        private bool Reduce(List<ParseTreeNode> top, ParseTreeNode next)
         {
-            for (int i = top.Count - 1; i >= 0; i--)
+            //for (int i = top.Count - 1; i >= 0; i--)
+            for (int i = 0; i < top.Count; i++)
             {
                 int length = top.Count - i;
-                var nonterm = GrammarRules.MatchReduce(top, i, length);
+                var nonterm = GrammarRules.MatchReduce(top, i, length, next);
                 if (nonterm != null)
                 {
                     top.RemoveRange(i, length);
@@ -63,14 +71,10 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             return false;
         }
 
-        private bool CanShift(int i, IReadOnlyList<Token> tokens)
+        private void Shift(List<ParseTreeNode> top, TermParseTreeNode next, ref int i)
         {
-            return i < tokens.Count;
-        }
-
-        private void Shift(List<ParseTreeNode> top, IReadOnlyList<Token> tokens, int i)
-        {
-            top.Add(new TermParseTreeNode(tokens[i]));
+            top.Add(next);
+            i += 1;
             Console.WriteLine("Shift");
         }
 
