@@ -1,0 +1,4 @@
+Var a, x;
+Var b, y;
+a := 6;
+IF a==6 THEN x := 1; ELSE x := -1;

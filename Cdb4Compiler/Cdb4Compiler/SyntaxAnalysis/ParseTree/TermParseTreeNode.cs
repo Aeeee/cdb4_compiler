@@ -8,6 +8,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.ParseTree
     public class TermParseTreeNode : ParseTreeNode
     {
         public Token Token { get; private set; }
+        public override int ChildCount => 0;
 
         public TermParseTreeNode(Token token)
         {

@@ -4,6 +4,7 @@ using Cdb4Compiler.SyntaxAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace ConsoleApp1
 {
@@ -20,17 +21,26 @@ namespace ConsoleApp1
 
             string sourceText = ReadSource(filename);
             var lexicalAnalyzer = new LexicalAnalyzer(sourceText);
-            var errors = lexicalAnalyzer.GetAllErrors();
+            var lexErrors = lexicalAnalyzer.GetAllErrors();
 
-            if (errors.Count > 0)
+            if (lexErrors.Count > 0)
             {
-                PrintAllErrors(errors);
+                PrintLexErrors(lexErrors);
                 Console.ReadLine();
                 return;
             }
 
             var syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer.GetAllTokens());
+            var syntaxErrors = syntaxAnalyzer.GetErrors();
 
+            if (syntaxErrors.Count > 0)
+            {
+                PrintSyntaxErrors(syntaxErrors, sourceText);
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine("Success!");
 
             Console.ReadLine();
         }
@@ -56,7 +66,7 @@ namespace ConsoleApp1
                 return sr.ReadToEnd();
         }
 
-        static void PrintAllErrors(IReadOnlyList<LexicalError> errors)
+        static void PrintLexErrors(IReadOnlyList<LexicalError> errors)
         {
             Console.WriteLine($"Encountered {errors.Count} errors:");
             foreach (var err in errors)
@@ -64,6 +74,42 @@ namespace ConsoleApp1
                 Console.WriteLine(">> " + err.Text);
                 Console.WriteLine($"    (at line {err.AtLine}, col {err.AtColumn})");
             }
+        }
+
+        static void PrintSyntaxErrors(IReadOnlyList<SyntaxError> errors, string sourceCode)
+        {
+            Console.WriteLine($"Encountered {errors.Count} errors:");
+            foreach (var err in errors)
+            {
+                Console.WriteLine(">> " + err.Message);
+                if (err.Line >= 0)
+                    Console.WriteLine($"    (at line {err.Line})");
+                //if (err.IncludeFragment)
+                //{
+                //    Console.WriteLine("In fragment:");
+                //    Console.WriteLine(GetSourcePart(sourceCode, err.StartLine,
+                //            err.StartColumn, err.EndLine.Value, err.EndColumn.Value));
+                //}
+                //Console.WriteLine($"    (between ({err.StartLine}, {err.StartColumn}) and " +
+                //    $"({err.EndLine}, {err.EndColumn}).");
+            }
+        }
+
+        static string GetSourcePart(string source, int fromLine, int fromCol, int toLine, int toCol)
+        {
+            StringBuilder sb = new StringBuilder();
+            string[] lines = source.Split('\n');
+            for (int line = fromLine; line <= toLine; line++)
+            {
+                string lineStr = lines[line - 1];
+                int startCol = (line == fromLine) ? fromCol : 1;
+                int endCol = (line == toLine) ? toCol : lineStr.Length;
+                sb.Append(lineStr.Substring(startCol - 1, endCol - startCol));
+
+                if (line != toLine)
+                    sb.AppendLine();
+            }
+            return sb.Replace('\r', ' ').ToString();
         }
 
         static void PrintTokenList(IReadOnlyList<Token> tokens)
