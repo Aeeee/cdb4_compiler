@@ -42,7 +42,8 @@ namespace ConsoleApp1
             }
 
             Console.WriteLine("Success!");
-            ParseTreeOutput.Print(syntaxAnalyzer.GetParseTreeRoot());
+            //ParseTreeOutput.Print(syntaxAnalyzer.GetParseTreeRoot());
+            AstOutput.Print(syntaxAnalyzer.GetAstRoot());
 
             Console.ReadLine();
         }

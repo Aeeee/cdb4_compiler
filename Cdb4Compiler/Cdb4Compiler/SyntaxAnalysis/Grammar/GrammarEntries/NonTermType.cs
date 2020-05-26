@@ -15,6 +15,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar.GrammarEntries
         EXPRESSION,
         SUBEXPRESSION,
         OPERAND,
-        COMPLEX_OPERATOR
+        CONDITION
     }
 }

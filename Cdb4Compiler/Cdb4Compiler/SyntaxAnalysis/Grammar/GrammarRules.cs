@@ -55,7 +55,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
                     Nt(NonTermType.ASSIGNMENT)
                 ),
                 new GrammarEntrySet(null,
-                    Nt(NonTermType.COMPLEX_OPERATOR)
+                    Nt(NonTermType.CONDITION)
                 )
             ),
             new GrammarRule(Nt(NonTermType.ASSIGNMENT),
@@ -112,7 +112,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
                     T(TokenType.CONSTANT)
                 )
             ),
-            new GrammarRule(Nt(NonTermType.COMPLEX_OPERATOR),
+            new GrammarRule(Nt(NonTermType.CONDITION),
                 new GrammarEntrySet(null,
                     T(TokenType.KEYWORD, "IF"),
                     Nt(NonTermType.EXPRESSION),

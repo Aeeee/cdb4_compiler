@@ -4,13 +4,15 @@ using Cdb4Compiler.SyntaxAnalysis.Grammar.GrammarEntries;
 using Cdb4Compiler.SyntaxAnalysis.ParseTree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
 {
     public class AscendingLeftmostAnalyzerImpl
     {
-        public void Analyze(IReadOnlyList<Token> tokens, List<SyntaxError> errors, ref ParseTreeNode root)
+        public void Analyze(IReadOnlyList<Token> tokens, List<SyntaxError> errors,
+            ref ParseTreeNode root)
         {
             if (tokens.Count == 0)
                 return;
@@ -158,7 +160,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             return ((TermParseTreeNode)node).Token.AtLine;
         }
 
-        private void Unshift(List<ParseTreeNode> top, int i)
+        private void Unreduce(List<ParseTreeNode> top, int i)
         {
             if (!(top[i] is NonTermParseTreeNode))
                 return;

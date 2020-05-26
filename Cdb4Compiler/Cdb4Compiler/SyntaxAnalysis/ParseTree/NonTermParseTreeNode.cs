@@ -22,6 +22,11 @@ namespace Cdb4Compiler.SyntaxAnalysis.ParseTree
             children.Add(node);
         }
 
+        public void RemoveChild(ParseTreeNode node)
+        {
+            children.Remove(node);
+        }
+
         public override string ToString()
         {
             return $"[NonTerm({Type})]";
