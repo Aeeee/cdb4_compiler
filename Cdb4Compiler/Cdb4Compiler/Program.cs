@@ -1,4 +1,5 @@
-﻿using Cdb4Compiler.LexicalAnalysis;
+﻿using Cdb4Compiler.DataFormatting;
+using Cdb4Compiler.LexicalAnalysis;
 using Cdb4Compiler.LexicalAnalysis.Tokens;
 using Cdb4Compiler.SyntaxAnalysis;
 using System;
@@ -41,6 +42,7 @@ namespace ConsoleApp1
             }
 
             Console.WriteLine("Success!");
+            ParseTreeOutput.Print(syntaxAnalyzer.GetParseTreeRoot());
 
             Console.ReadLine();
         }
