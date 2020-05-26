@@ -45,7 +45,79 @@ namespace Cdb4Compiler.SyntaxAnalysis.AstBuilderImpl
                 root.AddOperation(varNode);
             }
 
+            if (nt.Type == NonTermType.ASSIGNMENT)
+            {
+                var binOpNode = ParseAssignment(node);
+                root.AddOperation(binOpNode);
+            }
 
+            if (nt.Type == NonTermType.CONDITION)
+            {
+                var condNode = ParseCondition(node);
+                root.AddOperation(condNode);
+            }
+        }
+
+        private AstNode ParseAssignment(ParseTreeNode node)
+        {
+            var nt = node as NonTermParseTreeNode;
+            var left = ParseNode(nt.Children[0]);
+            var right = ParseNode(nt.Children[2]);
+            return new BinaryOpNode(":=", left, right);
+        }
+
+        private AstNode ParseCondition(ParseTreeNode node)
+        {
+            var nt = node as NonTermParseTreeNode;
+            var cond = ParseNode(nt.Children[0]);
+            var thenNode = ParseNode(nt.Children[1]);
+            AstNode elseNode = nt.ChildCount > 2 ? ParseNode(nt.Children[2]) : null;
+            return new ConditionNode(cond, thenNode, elseNode);
+        }
+
+        private AstNode ParseNode(ParseTreeNode node)
+        {
+            if (node is TermParseTreeNode)
+            {
+                var term = node as TermParseTreeNode;
+                if (term.Token.Type == TokenType.IDENTIFIER)
+                    return new IdentifierNode(term.Token.Text);
+                if (term.Token.Type == TokenType.CONSTANT)
+                    return new ConstantNode(term.Token.Text);
+
+                throw new Exception("Unsupported terminal parse node type: " + term.Token.Type);
+            }
+
+            var nt = node as NonTermParseTreeNode;
+            if (nt.Type == NonTermType.ASSIGNMENT)
+                return ParseAssignment(node);
+            if (nt.Type == NonTermType.CONDITION)
+                return ParseCondition(node);
+
+            if (nt.Type != NonTermType.EXPRESSION)
+                throw new Exception("Unsupported non-terminal parse node type: " + nt.Type);
+
+            if (nt.ChildCount == 1)
+                return ParseNode(nt.Children[0]);
+            if (nt.ChildCount == 2)
+            {
+                var unaryOp = nt.Children[0] as TermParseTreeNode;
+                var right = ParseNode(nt.Children[1]);
+
+                if (unaryOp.Token.Type != TokenType.MATH_OP || unaryOp.Token.Text != "-")
+                    throw new Exception("Unsupported unary operator: " + unaryOp.Token.Text);
+                return new UnaryOpNode(unaryOp.Token.Text, right);
+            }
+            if (nt.ChildCount == 3)
+            {
+                var left = ParseNode(nt.Children[0]);
+                var right = ParseNode(nt.Children[2]);
+                var op = nt.Children[1] as TermParseTreeNode;
+
+                return new BinaryOpNode(op.Token.Text, left, right);
+            }
+
+            throw new Exception("More than 3 children in expression are not supported.");
         }
 
         private ParseTreeNode SimplifyTree(ParseTreeNode parseTreeRoot)
@@ -79,7 +151,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.AstBuilderImpl
                 case NonTermType.VAR_DECL:
                 case NonTermType.CONDITION:
                 case NonTermType.EXPRESSION:
-                case NonTermType.OPERATOR:
                     {
                         var children = new List<ParseTreeNode>(nt.Children);
                         foreach (var child in children)

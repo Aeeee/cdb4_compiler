@@ -60,13 +60,36 @@ namespace Cdb4Compiler.DataFormatting
 
             if (node is IHasLeftAstNode)
             {
-                Print(((IHasLeftAstNode)node).Left, indent + 1, ignoreIndents);
+                HashSet<int> newIgnoreIndents = new HashSet<int>(ignoreIndents);
+                if (!(node is IHasRightAstNode))
+                    newIgnoreIndents.Add(indent);
+                Print(((IHasLeftAstNode)node).Left, indent + 1, newIgnoreIndents);
             }
 
             if (node is IHasRightAstNode)
             {
-                Print(((IHasRightAstNode)node).Right, indent + 1, ignoreIndents);
+                HashSet<int> newIgnoreIndents = new HashSet<int>(ignoreIndents);
+                newIgnoreIndents.Add(indent);
+                Print(((IHasRightAstNode)node).Right, indent + 1, newIgnoreIndents);
             }
+
+            if (node is ConditionNode)
+            {
+                HashSet<int> newIgnoreIndents = new HashSet<int>(ignoreIndents);
+                newIgnoreIndents.Add(indent);
+
+                var cond = node as ConditionNode;
+                Print(cond.Condition, indent + 1, ignoreIndents);
+                
+                if (cond.Else != null)
+                {
+                    Print(cond.Then, indent + 1, ignoreIndents);
+                    Print(cond.Else, indent + 1, newIgnoreIndents);
+                }
+                else
+                    Print(cond.Then, indent + 1, newIgnoreIndents);
+            }
+
         }
 
 

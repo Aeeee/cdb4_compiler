@@ -7,8 +7,8 @@ namespace Cdb4Compiler.SyntaxAnalysis.Ast
     public class BinaryOpNode : AstNode, IHasLeftAstNode, IHasRightAstNode
     {
         public string Operator { get; private set; }
-        public AstNode Left { get; private set; }
-        public AstNode Right { get; private set; }
+        public AstNode Left { get; set; }
+        public AstNode Right { get; set; }
 
         public BinaryOpNode(string op, AstNode left, AstNode right)
         {

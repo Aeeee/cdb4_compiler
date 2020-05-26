@@ -15,7 +15,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.Ast
 
         public override string ToString()
         {
-            return $"[Contant '{Value}']";
+            return $"[Constant '{Value}']";
         }
 
     }
