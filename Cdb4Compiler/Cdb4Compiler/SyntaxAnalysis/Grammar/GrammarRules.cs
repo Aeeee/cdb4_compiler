@@ -138,7 +138,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.Grammar
         private static TerminalEntry T(TokenType type) => new TerminalEntry(type);
         private static TerminalEntry T(TokenType type, string restr) => new TerminalEntry(type, restr);
 
-        public static NonTermEntry MatchReduce(List<ParseTreeNode> nodes,
+        public static NonTermEntry Match(List<ParseTreeNode> nodes,
             int startFrom, int count, ParseTreeNode next)
         {
             var rule = GetMatchingRule(nodes, startFrom, count, next);

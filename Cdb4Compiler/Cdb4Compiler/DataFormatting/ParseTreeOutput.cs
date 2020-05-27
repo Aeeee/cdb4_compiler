@@ -35,12 +35,12 @@ namespace Cdb4Compiler.DataFormatting
             if (node is TermParseTreeNode)
             {
                 var term = node as TermParseTreeNode;
-                Console.Write($"Terminal[{term.Token.Type}, '{term.Token.Text}']\n");
+                Console.Write($"T[{term.Token.Type}, '{term.Token.Text}']\n");
             }
             else
             {
                 var nonterm = node as NonTermParseTreeNode;
-                Console.Write($"NonTerminal[{nonterm.Type}]\n");
+                Console.Write($"NT[{nonterm.Type}]\n");
 
                 foreach (var child in nonterm.Children)
                 {

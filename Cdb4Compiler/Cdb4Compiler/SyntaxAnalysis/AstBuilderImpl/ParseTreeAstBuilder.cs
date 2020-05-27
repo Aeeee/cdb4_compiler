@@ -14,7 +14,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.AstBuilderImpl
         public ProgramNode BuildAST(ParseTreeNode parseTreeRoot)
         {
             parseTreeRoot = SimplifyTree(parseTreeRoot);
-            ParseTreeOutput.Print(parseTreeRoot);
+            //ParseTreeOutput.Print(parseTreeRoot);
 
             ProgramNode root = new ProgramNode();
             BuildAST(root, parseTreeRoot);

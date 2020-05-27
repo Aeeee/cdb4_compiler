@@ -171,7 +171,7 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             for (int i = 0; i < top.Count; i++)
             {
                 int length = top.Count - i;
-                var nonterm = GrammarRules.MatchReduce(top, i, length, next);
+                var nonterm = GrammarRules.Match(top, i, length, next);
                 if (nonterm != null)
                 {
                     var node = new NonTermParseTreeNode(nonterm.Type);
