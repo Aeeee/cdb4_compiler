@@ -61,9 +61,6 @@ namespace Cdb4Compiler.LexicalAnalysis.Impl
             int nextMatches = (nextChar == null) ? 0 :
                 TokenRules.GetMatchCount(GetBufferContent(col + 1));
 
-            //Console.WriteLine("buffer: " + GetBufferContent(col));
-            //Console.WriteLine("cur matches: " + curMatches + ", next: " + nextMatches);
-
             if (curMatches > 0 && nextMatches == 0)
             {
                 var token = TokenRules.CreateToken(GetBufferContent(col), line+1, bufferStart+1);

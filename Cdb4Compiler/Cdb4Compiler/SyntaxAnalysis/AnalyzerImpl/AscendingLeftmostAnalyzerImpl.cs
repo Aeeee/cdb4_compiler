@@ -22,8 +22,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             int i = 1;
             while (top.Count > 1 || !IsNonTermOfType(top[0], NonTermType.PROGRAM))
             {
-                //PrintTop(top);
-
                 if (Reduce(top, next))
                     continue;
 
@@ -43,15 +41,10 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             }
             else
                 root = top[0];
-
-            //PrintTop(top);
         }
 
         private void DetectErrors(List<ParseTreeNode> top, List<SyntaxError> errors)
         {
-            
-            //Console.WriteLine("Error: cannot shift or reduce anymore.");
-
             if (top[0] is NonTermParseTreeNode && ((NonTermParseTreeNode)top[0]).Type == NonTermType.VAR_LIST)
                 errors.Add(new SyntaxError(1, "Variable declaration block is incomplete (missing a semicolon?)."));
             else if (!(top[0] is NonTermParseTreeNode) || ((NonTermParseTreeNode)top[0]).Type != NonTermType.VAR_DECL)
@@ -160,19 +153,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
             return ((TermParseTreeNode)node).Token.AtLine;
         }
 
-        private void Unreduce(List<ParseTreeNode> top, int i)
-        {
-            if (!(top[i] is NonTermParseTreeNode))
-                return;
-            var node = top[i] as NonTermParseTreeNode;
-            var children = node.Children;
-
-            top.RemoveAt(i);
-
-            for (int j = 0; j < children.Count; j++)
-                top.Insert(i + j, children[j]);
-        }
-
         private TermParseTreeNode PeekNextTerm(IReadOnlyList<Token> tokens, int i)
         {
             return tokens.Count > i ? new TermParseTreeNode(tokens[i]) : null;
@@ -200,7 +180,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
 
                     top.RemoveRange(i, length);
                     top.Insert(i, node);
-                    //Console.WriteLine("Reduce");
                     return true;
                 }
             }
@@ -212,7 +191,6 @@ namespace Cdb4Compiler.SyntaxAnalysis.AnalyzerImpl
         {
             top.Add(next);
             i += 1;
-            //Console.WriteLine("Shift");
         }
 
         private List<ParseTreeNode> BuildInitialTop(IReadOnlyList<Token> tokens)

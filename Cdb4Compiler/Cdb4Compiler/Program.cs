@@ -42,7 +42,10 @@ namespace ConsoleApp1
             }
 
             Console.WriteLine("Success!");
-            //ParseTreeOutput.Print(syntaxAnalyzer.GetParseTreeRoot());
+            Console.WriteLine("\n\nParse tree:");
+            ParseTreeOutput.Print(syntaxAnalyzer.GetParseTreeRoot());
+
+            Console.WriteLine("\n\nAST:");
             AstOutput.Print(syntaxAnalyzer.GetAstRoot());
 
             Console.ReadLine();
@@ -87,14 +90,6 @@ namespace ConsoleApp1
                 Console.WriteLine(">> " + err.Message);
                 if (err.Line >= 0)
                     Console.WriteLine($"    (at line {err.Line})");
-                //if (err.IncludeFragment)
-                //{
-                //    Console.WriteLine("In fragment:");
-                //    Console.WriteLine(GetSourcePart(sourceCode, err.StartLine,
-                //            err.StartColumn, err.EndLine.Value, err.EndColumn.Value));
-                //}
-                //Console.WriteLine($"    (between ({err.StartLine}, {err.StartColumn}) and " +
-                //    $"({err.EndLine}, {err.EndColumn}).");
             }
         }
 
