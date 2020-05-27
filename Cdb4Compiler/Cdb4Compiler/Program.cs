@@ -74,7 +74,7 @@ namespace ConsoleApp1
 
         static void PrintLexErrors(IReadOnlyList<LexicalError> errors)
         {
-            Console.WriteLine($"Encountered {errors.Count} errors:");
+            Console.WriteLine($"Encountered {errors.Count} error(s):");
             foreach (var err in errors)
             {
                 Console.WriteLine(">> " + err.Text);
@@ -84,7 +84,7 @@ namespace ConsoleApp1
 
         static void PrintSyntaxErrors(IReadOnlyList<SyntaxError> errors, string sourceCode)
         {
-            Console.WriteLine($"Encountered {errors.Count} errors:");
+            Console.WriteLine($"Encountered {errors.Count} error(s):");
             foreach (var err in errors)
             {
                 Console.WriteLine(">> " + err.Message);

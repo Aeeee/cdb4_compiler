@@ -20,6 +20,9 @@ namespace Cdb4Compiler.SyntaxAnalysis
             var analyzer = new AscendingLeftmostAnalyzerImpl();
             analyzer.Analyze(tokens, errors, ref parseTreeRoot);
 
+            if (errors.Count > 0)
+                return;
+
             var astBuilder = new ParseTreeAstBuilder();
             astRoot = astBuilder.BuildAST(parseTreeRoot);
         }
